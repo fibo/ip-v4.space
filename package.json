@@ -1,0 +1,39 @@
+{
+  "name": "ip-v4.space",
+  "version": "0.0.0",
+  "private": true,
+  "description": "is an IPv4 space visualization, your eye to see the Internet as we imagined in the 90s",
+  "main": "index.js",
+  "scripts": {
+    "browserify": "browserify src/app.js | uglifyjs > bundle.js",
+    "build": "npm run browserify; npm run sass",
+    "sass": "node-sass src/sass/style.scss --output-style compressed --output .",
+    "sass_watch": "node-sass src/sass/style.scss --watch --output .",
+    "start": "budo -l -o src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fibo/ip-v4.space.git"
+  },
+  "keywords": [
+    "ip",
+    "ipv4",
+    "visual"
+  ],
+  "author": {
+    "name": "Gianluca Casati",
+    "url": "http://g14n.info"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fibo/ip-v4.space/issues"
+  },
+  "homepage": "http://ip-v4.space",
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "budo": "^9.3.0",
+    "node-sass": "^4.0.0",
+    "uglify-js": "^2.7.5"
+  }
+}
