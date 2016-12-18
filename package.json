@@ -7,11 +7,19 @@
   "scripts": {
     "browserify": "browserify src/app.js | uglifyjs > bundle.js",
     "build": "npm run browserify; npm run sass",
+    "check-deps": "npm outdated",
+    "lint": "npm run lint_css; npm run lint_js",
+    "lint_css": "sass-lint -v src/sass/*",
+    "lint_js": "cd src; standard; cd ..",
     "sass": "node-sass src/sass/style.scss --output-style compressed --output .",
     "sass_watch": "node-sass src/sass/style.scss --watch --output .",
-    "start": "budo -l -o src/app.js",
+    "start": "budo -l -o -s bundle.js src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "pre-commit": [
+    "lint",
+    "check-deps"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fibo/ip-v4.space.git"
@@ -34,6 +42,8 @@
     "browserify": "^13.1.1",
     "budo": "^9.3.0",
     "node-sass": "^4.0.0",
+    "pre-commit": "^1.2.2",
+    "sass-lint": "^1.10.2",
     "uglify-js": "^2.7.5"
   }
 }
