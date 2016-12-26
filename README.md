@@ -40,6 +40,10 @@ To deploy JavaScript and CSS, build first then upload to S3
 npm run build
 aws s3 cp bundle.js s3://ip-v4.space/bundle.js
 aws s3 cp style.css s3://ip-v4.space/style.css
-aws s3 sync media s3://ip-v4.space/media
 ```
 
+To deploy media modifications, if any
+
+```bash
+aws s3 sync media s3://ip-v4.space/media
+```
