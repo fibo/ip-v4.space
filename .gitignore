@@ -1,3 +1,4 @@
 node_modules
 bundle.js
 style.css
+.DS_Store

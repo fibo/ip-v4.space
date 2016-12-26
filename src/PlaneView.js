@@ -90,7 +90,7 @@ function drawCells () {
 
   for (var i = 0; i < 16; i++) {
     for (var j = 0; j < 16; j++) {
-      var index = i * 16 + j
+      var index = j * 16 + i
       if (cells[index] === 1) {
         context.fillRect(i * unit, j * unit, unit, unit)
       }
