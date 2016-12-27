@@ -9,6 +9,7 @@ function PlaneView (cells) {
 
   var canvas = document.getElementById(id)
   var context = canvas.getContext('2d')
+  console.log(context)
 
   function getUnit () {
     var border = 1
@@ -84,7 +85,11 @@ PlaneView.prototype.drawGrid = drawGrid
 function drawCells () {
   var cells = this.cells
   var context = this.context
-  context.fillStyle = 'rgb(200,0,0)'
+
+  var color = 'rgb(200, 0, 0)'
+  context.fillStyle = color
+  context.shadowBlur = 10
+  context.shadowColor = color
 
   var unit = this.unit
 
@@ -96,6 +101,10 @@ function drawCells () {
       }
     }
   }
+
+  // Remove shadow.
+  context.shadowBlur = 0
+  context.shadowColor = 'transparent'
 }
 
 PlaneView.prototype.drawCells = drawCells
