@@ -9,7 +9,6 @@ function PlaneView (cells) {
 
   var canvas = document.getElementById(id)
   var context = canvas.getContext('2d')
-  console.log(context)
 
   function getUnit () {
     var border = 1
