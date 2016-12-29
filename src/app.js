@@ -7,23 +7,23 @@ function between0and255 (n) {
 }
 
 function parentClassB (subnet) {
-  return subnet.split('\.').splice(0, 2).join('.')
+  return subnet.split('.').splice(0, 2).join('.')
 }
 
 function isValidClassB (subnet) {
-  var n = subnet.split('\.')
+  var n = subnet.split('.')
 
   return between0and255(n[0]) && between0and255(n[1])
 }
 
 function isValidClassC (subnet) {
-  var n = subnet.split('\.')
+  var n = subnet.split('.')
 
   return between0and255(n[0]) && between0and255(n[1]) && between0and255(n[2])
 }
 
 function jsonDataURL (subnet) {
-  var a = subnet.split('\.')[0]
+  var a = subnet.split('.')[0]
 
   return '/data/' + a + '/' + subnet + '.json'
 }
