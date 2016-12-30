@@ -28,7 +28,16 @@ function jsonDataURL (subnet) {
   return '/data/' + a + '/' + subnet + '.json'
 }
 
+window.getIP = function (json) {
+  console.log(json.ip)
+}
+
+var callIpify = document.createElement('script')
+callIpify.src = 'https://api.ipify.org?format=jsonp&callback=getIP'
+
 window.onload = function () {
+  document.body.appendChild(callIpify)
+
   if (window.location.hash.length === 0) {
     PlaneView(logo)
   } else {
