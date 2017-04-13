@@ -2,31 +2,9 @@ var XHR = window.XMLHttpRequest
 var PlaneView = require('./PlaneView')
 var logo = require('./logo')
 
-function between0and255 (n) {
-  return (n >= 0) || (n <= 255)
-}
-
-function parentClassB (subnet) {
-  return subnet.split('.').splice(0, 2).join('.')
-}
-
-function isValidClassB (subnet) {
-  var n = subnet.split('.')
-
-  return between0and255(n[0]) && between0and255(n[1])
-}
-
-function isValidClassC (subnet) {
-  var n = subnet.split('.')
-
-  return between0and255(n[0]) && between0and255(n[1]) && between0and255(n[2])
-}
-
-function jsonDataURL (subnet) {
-  var a = subnet.split('.')[0]
-
-  return '/data/' + a + '/' + subnet + '.json'
-}
+var JSONDataURL = require('./util/JSONDataURL')
+var isValidClassC = require('./util/isValidClassC')
+var parentClassB = require('./util/parentClassB')
 
 window.getIP = function (json) {
   console.log(json.ip)
@@ -47,7 +25,7 @@ window.onload = function () {
     if (isValidClassC(subnet)) {
       var req = new XHR()
 
-      var url = jsonDataURL(parentClassB(subnet))
+      var url = JSONDataURL(parentClassB(subnet))
 
       req.onload = function (res) {
         var dataB = JSON.parse(req.responseText)
@@ -69,4 +47,3 @@ window.onload = function () {
     }
   }
 }
-
