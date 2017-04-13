@@ -39,12 +39,12 @@
   },
   "homepage": "http://ip-v4.space",
   "devDependencies": {
-    "browserify": "^13.1.1",
-    "budo": "^9.3.0",
-    "node-sass": "^4.1.1",
+    "browserify": "^14.3.0",
+    "budo": "^9.4.7",
+    "node-sass": "^4.5.2",
     "pre-commit": "^1.2.2",
     "sass-lint": "^1.10.2",
-    "uglify-js": "^2.7.5"
+    "uglify-js": "^2.8.22"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
