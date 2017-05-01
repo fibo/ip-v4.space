@@ -1,3 +1,8 @@
+var Root = require('./components/Root')
+var getInitialState = require('./store/getInitialState')
+var reducer = require('./reducer')
+
+/*
 var XHR = window.XMLHttpRequest
 var PlaneView = require('./PlaneView')
 var logo = require('./logo')
@@ -12,6 +17,36 @@ window.getIP = function (json) {
 
 var callIpify = document.createElement('script')
 callIpify.src = 'https://api.ipify.org?format=jsonp&callback=getIP'
+*/
+
+/**
+ * App loader.
+ *
+ * window.addEventListener('load', app(state))
+ */
+
+function app (initialState) {
+  return function () {
+    var currentState = initialState || getInitialState()
+
+    var render = Function.prototype
+
+    function dispatch (action) {
+      currentState = reducer(currentState, action)
+      console.log(action, currentState)
+      render(currentState)
+    }
+
+    var root = new Root(document.body, dispatch)
+
+    render = root.render.bind(root)
+    render(currentState)
+  }
+}
+
+module.exports = app
+
+/*
 
 window.onload = function () {
   document.body.appendChild(callIpify)
@@ -47,3 +82,4 @@ window.onload = function () {
     }
   }
 }
+*/

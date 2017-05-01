@@ -1,15 +1,17 @@
 var Component = require('./Component')
 
-var AddTodo = require('./AddTodo')
-var TodoList = require('./TodoList')
+var Board = require('./Board')
+var Ipify = require('./Ipify')
 
 class Root extends Component {
   constructor (element, dispatch) {
     super(element, dispatch)
 
-    this.component.TodoList = new TodoList(element.querySelector('ul.todo-list'), dispatch)
+    var canvas = document.createElement('canvas')
+    element.appendChild(canvas)
+    this.component.Board = new Board(canvas, dispatch)
 
-    this.component.AddTodo = new AddTodo(element.querySelector('.add-todo'), dispatch)
+    this.component.Ipify = new Ipify(element, dispatch)
   }
 }
 

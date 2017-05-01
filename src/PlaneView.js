@@ -50,11 +50,11 @@ function PlaneView (cells) {
 
   var cursormove = 'touchmove' in document ? 'touchmove' : 'mousemove'
 
-  canvas.addEventListener(cursormove, function (evt) {
+  canvas.addEventListener(cursormove, function (event) {
     var rect = canvas.getBoundingClientRect()
 
-    var x = evt.clientX - rect.left
-    var y = evt.clientY - rect.top
+    var x = event.clientX - rect.left
+    var y = event.clientY - rect.top
 
     var size = getSize()
 
@@ -77,7 +77,7 @@ function PlaneView (cells) {
 
   var cursorleave = 'touchleave' in document ? 'touchleave' : 'mouseleave'
 
-  canvas.addEventListener(cursorleave, function (evt) {
+  canvas.addEventListener(cursorleave, function (event) {
     selectedCell = null
     _draw()
   })
@@ -129,7 +129,7 @@ function drawCells () {
   var unit = this.unit
 
   var color = 'rgb(200, 100, 100)'
-  var highlighColor = 'rgb(200, 0, 0)'
+  var highlightedColor = 'rgb(200, 0, 0)'
 
   context.shadowBlur = 10
 
@@ -138,8 +138,8 @@ function drawCells () {
       var isSelectedCell = selectedCell && (selectedCell.i === i) && (selectedCell.j === j)
 
       if (isSelectedCell) {
-        context.fillStyle = highlighColor
-        context.shadowColor = highlighColor
+        context.fillStyle = highlightedColor
+        context.shadowColor = highlightedColor
       } else {
         context.fillStyle = color
         context.shadowColor = color
@@ -151,7 +151,7 @@ function drawCells () {
         context.fillRect(i * unit, j * unit, unit, unit)
       } else {
         if (isSelectedCell) {
-          context.strokeStyle = highlighColor
+          context.strokeStyle = highlightedColor
           context.lineWidth = 2
 
           // Draw a square.
