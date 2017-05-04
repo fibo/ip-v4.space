@@ -1,8 +1,11 @@
 .*.swp
 node_modules
+npm-debug.log
+.DS_Store
+
+# Build files
 bundle.js
 style.css
-.DS_Store
 
 # For debugging purpouse
 data
