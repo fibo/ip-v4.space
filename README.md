@@ -27,6 +27,14 @@ npm run sass_watch
 
 ### Deploy
 
+AWS environment variables are required
+
+```bash
+export AWS_ACCESS_KEY_ID=AKIA***
+export AWS_SECRET_ACCESS_KEY="xxx***"
+export export AWS_DEFAULT_REGION=us-east-1
+```
+
 Upload the whole app to S3.
 
 ```bash
