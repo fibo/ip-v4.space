@@ -5,7 +5,7 @@
   "description": "is an IPv4 space visualization, your eye to see the Internet as we imagined in the 90s",
   "main": "src/index.js",
   "scripts": {
-    "browserify": "NODE_ENV=production browserify $npm_package_main -t envify -t babelify | uglifyjs --compress > bundle.js",
+    "browserify": "NODE_ENV=production browserify $npm_package_main -t envify -t babelify | uglifyjs > bundle.js",
     "build": "npm run browserify; npm run sass",
     "check-deps": "npm outdated",
     "predeploy_css": "npm run sass",
