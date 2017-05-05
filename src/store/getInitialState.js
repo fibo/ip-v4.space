@@ -3,11 +3,12 @@ var Board = require('../components/Board')
 
 function getInitialState () {
   return {
-    myIpAddress: null,
     board: {
       cells: logo,
       size: Board.getSize()
-    }
+    },
+    myIpAddress: null,
+    subnetLevel: 0
   }
 }
 

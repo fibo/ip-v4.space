@@ -41,22 +41,5 @@ Upload the whole app to S3.
 npm run deploy
 ```
 
-To deploy modifications to markup, upload index.html and 404.html to S3.
-
-```bash
-npm run deploy_html
-```
-
-To deploy JavaScript and CSS, it will build first then upload to S3
-
-```bash
-npm run deploy_js
-npm run deploy_css
-```
-
-To deploy media modifications, if any
-
-```bash
-npm run deploy_media
-```
+Go to [Cloudflare Development mode](https://www.cloudflare.com/a/caching/ip-v4.space#development_mode) and disable cache to see results instantly.
 

@@ -59,18 +59,13 @@ class Board extends Component {
       var i = Math.floor(16 * x / size)
       var j = Math.floor(16 * y / size)
 
-      if (selectedCell === null) selectedCell = { t: 0 }
+      if (selectedCell === null) selectedCell = {}
 
-      if ((i === selectedCell.i) && (j === selectedCell.j)) {
-        selectedCell.t = selectedCell.t + 1
-      } else {
+      if ((i !== selectedCell.i) || (j !== selectedCell.j)) {
         selectedCell.i = i
         selectedCell.j = j
+        dispatch({ type: 'BOARD_DRAW' })
       }
-
-      // Redraw only if selectedCell changed, and cursor position is
-      // inside it for few time.
-      if (selectedCell.t > 10) dispatch({ type: 'BOARD_DRAW' })
     })
 
     var cursorleave = 'touchleave' in document ? 'touchleave' : 'mouseleave'
@@ -82,35 +77,54 @@ class Board extends Component {
   }
 
   drawCells (state) {
-    var cells = state.board.cells
     var context = this.context
     var selectedCell = this.selectedCell
     var unit = this.unit
 
+    var cells = state.board.cells
+    var myIpAddress = state.myIpAddress
+    var subnetLevel = state.subnetLevel
+
     var color = 'rgb(200, 100, 100)'
     var highlightedColor = 'rgb(200, 0, 0)'
+    var myCellColor = 'rgb(0, 200, 0)'
+
+    var myCellNum
+
+    // myIpAddress = 10.20.30.40 |
+    //                           | => myCellNum = 20
+    // subnetLevel = 1           |
+    if (myIpAddress) {
+      myCellNum = parseInt(myIpAddress.split('.')[subnetLevel])
+    }
 
     context.shadowBlur = 10
 
     for (var i = 0; i < 16; i++) {
       for (var j = 0; j < 16; j++) {
         var isSelectedCell = selectedCell && (selectedCell.i === i) && (selectedCell.j === j)
+        var index = j * 16 + i
+        var isMyCell = myCellNum === index
 
         if (isSelectedCell) {
           context.fillStyle = highlightedColor
           context.shadowColor = highlightedColor
+          context.strokeStyle = highlightedColor
         } else {
-          context.fillStyle = color
-          context.shadowColor = color
+          if (isMyCell) {
+            context.fillStyle = myCellColor
+            context.shadowColor = myCellColor
+            context.strokeStyle = myCellColor
+          } else {
+            context.fillStyle = color
+            context.shadowColor = color
+          }
         }
-
-        var index = j * 16 + i
 
         if (cells[index] === 1) {
           context.fillRect(i * unit, j * unit, unit, unit)
         } else {
-          if (isSelectedCell) {
-            context.strokeStyle = highlightedColor
+          if (isSelectedCell || isMyCell) {
             context.lineWidth = 2
 
             // Draw a square.
@@ -133,6 +147,7 @@ class Board extends Component {
     var unit = this.unit
 
     context.lineWidth = 1
+    context.shadowBlur = 0
     context.strokeStyle = '#aeaeae'
 
     for (var i = 0; i <= size; i += unit) {
