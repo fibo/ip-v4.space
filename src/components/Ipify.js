@@ -5,7 +5,6 @@ class Ipify extends Component {
     super(element, dispatch)
 
     function getMyIpAddress (json) {
-      console.log(json.ip)
       dispatch({
         type: 'GET_MY_IP_ADDRESS_SUCCESS',
         myIpAddress: json.ip
@@ -28,7 +27,6 @@ class Ipify extends Component {
     var script = document.createElement('script')
     script.src = src
     element.appendChild(script)
-    console.log(src)
 
     this.scriptCreated = true
   }
