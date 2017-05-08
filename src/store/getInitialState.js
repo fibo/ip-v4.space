@@ -1,5 +1,6 @@
 var logo = require('../util/logo')
 var Board = require('../components/Board')
+var QueryString = require('../components/QueryString')
 
 function getInitialState () {
   return {
@@ -8,7 +9,7 @@ function getInitialState () {
       size: Board.getSize()
     },
     myIpAddress: null,
-    subnetLevel: 0
+    subnet: undefined
   }
 }
 

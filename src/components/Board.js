@@ -46,6 +46,23 @@ class Board extends Component {
       })
     })
 
+    canvas.addEventListener('click', function (event) {
+      var rect = canvas.getBoundingClientRect()
+
+      var x = event.clientX - rect.left
+      var y = event.clientY - rect.top
+
+      var size = getSize()
+
+      var i = Math.floor(16 * x / size)
+      var j = Math.floor(16 * y / size)
+
+      dispatch({
+        type: 'ENTER_CELL',
+        cell: [i, j]
+      })
+    })
+
     var cursormove = 'touchmove' in document ? 'touchmove' : 'mousemove'
 
     canvas.addEventListener(cursormove, function (event) {
@@ -83,7 +100,12 @@ class Board extends Component {
 
     var cells = state.board.cells
     var myIpAddress = state.myIpAddress
-    var subnetLevel = state.subnetLevel
+    var subnet = state.subnet
+    var level = 0
+
+    if (subnet) {
+      level = subnet.split('.')
+    }
 
     var color = 'rgb(200, 100, 100)'
     var highlightedColor = 'rgb(200, 0, 0)'
@@ -93,9 +115,9 @@ class Board extends Component {
 
     // myIpAddress = 10.20.30.40 |
     //                           | => myCellNum = 20
-    // subnetLevel = 1           |
+    // level = 1                 |
     if (myIpAddress) {
-      myCellNum = parseInt(myIpAddress.split('.')[subnetLevel])
+      myCellNum = parseInt(myIpAddress.split('.')[level])
     }
 
     context.shadowBlur = 10

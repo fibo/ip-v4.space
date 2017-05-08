@@ -2,6 +2,7 @@ var Component = require('./Component')
 
 var Board = require('./Board')
 var Ipify = require('./Ipify')
+var QueryString = require('./QueryString')
 
 class Root extends Component {
   constructor (element, dispatch) {
@@ -12,6 +13,8 @@ class Root extends Component {
     this.component.Board = new Board(canvas, dispatch)
 
     this.component.Ipify = new Ipify(element, dispatch)
+
+    this.component.QueryString = new QueryString(null, dispatch)
   }
 }
 
