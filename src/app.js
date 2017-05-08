@@ -44,7 +44,7 @@ function app (initialState) {
       }
     }
 
-    var root = new Root(document.body, dispatch)
+    var root = new Root(document.getElementById('root'), dispatch)
 
     render = root.render.bind(root)
 
