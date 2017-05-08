@@ -15,7 +15,7 @@
     "deploy_js": "aws s3 cp bundle.js s3://ip-v4.space/bundle.js",
     "deploy_html": "for x in index 404; do npm run deploy_${x}_html; done",
     "deploy_index_html": "aws s3 cp index.html s3://ip-v4.space/index.html",
-    "deploy_seo": "for x in robots_txt sitemap_xml; do npm run deploy_${x}_html; done",
+    "deploy_seo": "for x in robots_txt sitemap_xml; do npm run deploy_${x}; done",
     "deploy_robots_txt": "aws s3 cp robots.txt s3://ip-v4.space/robots.txt",
     "deploy_sitemap_xml": "aws s3 cp sitemap.xml s3://ip-v4.space/sitemap.xml",
     "deploy_404_html": "aws s3 cp 404.html s3://ip-v4.space/404.html",
