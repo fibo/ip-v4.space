@@ -1,6 +1,10 @@
 var Component = require('./Component')
 
+var action = require('../action')
+
 var isValidClassA = require('../util/isValidClassA')
+var isValidClassB = require('../util/isValidClassB')
+var isValidClassC = require('../util/isValidClassC')
 
 function buildQueryString (queryObject) {
   var queryString = '?'
@@ -48,28 +52,28 @@ function save (queryObject) {
   }
 }
 
+function fetchData (dispatch, subnet) {
+  var query = subnet || 'master_tile'
+  dispatch(action.fetchDataRequest(query))
+}
+
 class QueryString extends Component {
   constructor (element, dispatch) {
     super(element, dispatch)
 
     var queryObject = getQueryObject()
-    var queryStringDataIsValid = true
     var subnet = queryObject.subnet
 
-    if (!isValidClassA(subnet)) {
-      queryStringDataIsValid = false
+    if (isValidClassA(subnet) || isValidClassB(subnet) || isValidClassC(subnet)) {
+      dispatch(action.fetchDataRequest(subnet))
+    } else {
       delete queryObject.subnet
-    }
-
-    if (queryStringDataIsValid) {
-      dispatch({
-        type: 'FOCUS_ON_SUBNET',
-        subnet: subnet
-      })
+      save(queryObject)
+      dispatch(action.fetchDataRequest('master_tile'))
     }
   }
 
-  render (state) {
+  render (state, dispatch) {
     var queryObject = getQueryObject()
     var nothingChanged = true
     var subnet = state.subnet
@@ -82,6 +86,8 @@ class QueryString extends Component {
     if (nothingChanged) return
 
     save(queryObject)
+
+    fetchData(dispatch, subnet)
   }
 }
 

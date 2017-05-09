@@ -1,5 +1,7 @@
 var staticProps = require('static-props')
 
+var action = require('../action')
+
 var Component = require('./Component')
 
 var classA = require('../util/classA')
@@ -45,10 +47,9 @@ class Board extends Component {
     // Events.
 
     window.addEventListener('resize', () => {
-      dispatch({
-        type: 'BOARD_RESIZE',
-        size: getSize()
-      })
+      var size = getSize()
+
+      dispatch(action.boardResize(size))
     })
 
     this.clickDisabled = false
@@ -66,10 +67,7 @@ class Board extends Component {
       var i = Math.floor(16 * x / size)
       var j = Math.floor(16 * y / size)
 
-      dispatch({
-        type: 'CLICK_CELL',
-        cell: [i, j]
-      })
+      dispatch(action.clickCell([i, j]))
     })
 
     var cursormove = 'touchmove' in document ? 'touchmove' : 'mousemove'
@@ -90,7 +88,7 @@ class Board extends Component {
       if ((i !== selectedCell.i) || (j !== selectedCell.j)) {
         selectedCell.i = i
         selectedCell.j = j
-        dispatch({ type: 'BOARD_DRAW' })
+        dispatch(action.boardDraw())
       }
     })
 
@@ -98,7 +96,7 @@ class Board extends Component {
 
     canvas.addEventListener(cursorleave, (event) => {
       selectedCell = null
-      dispatch({ type: 'BOARD_DRAW' })
+      dispatch(action.boardDraw())
     })
   }
 
@@ -123,6 +121,7 @@ class Board extends Component {
     var color = 'rgb(200, 100, 100)'
     var highlightedColor = 'rgb(200, 0, 0)'
     var myCellColor = 'rgb(0, 200, 0)'
+    var notFoundColor = 'rgb(17, 77, 77)'
 
     var myCellNum
 
@@ -169,13 +168,19 @@ class Board extends Component {
             context.shadowColor = myCellColor
             context.strokeStyle = myCellColor
           } else {
-            context.fillStyle = color
-            context.shadowColor = color
+            if (cells && cells[index] === -1) {
+              context.fillStyle = notFoundColor
+              context.shadowColor = notFoundColor
+            }
+            if (cells && cells[index] === 1) {
+              context.fillStyle = color
+              context.shadowColor = color
+            }
           }
         }
 
-        if (cells[index] === 1) {
-          context.fillRect(border + i * unit, border + j * unit, unit, unit)
+        if (cells && cells[index]) {
+          context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
         } else {
           if (isSelectedCell || isMyCell) {
             context.lineWidth = 2

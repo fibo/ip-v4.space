@@ -2,8 +2,13 @@ var isValidClassA = require('./util/isValidClassA')
 var isValidClassB = require('./util/isValidClassB')
 var isValidClassC = require('./util/isValidClassC')
 
+var emptyTile = () => { return Array(256).fill(-1) }
+
 function reducer (currenState, action) {
   var state = Object.assign(currenState)
+
+  var data = action.data
+  var query = action.query
 
   var subnet = state.subnet
 
@@ -28,12 +33,23 @@ function reducer (currenState, action) {
 
       break
 
-    case 'FOCUS_ON_SUBNET':
-      state.subnet = action.subnet
+    case 'FETCH_DATA_FAILURE':
+      state.board.cells = emptyTile()
+
+      break
+
+    case 'FETCH_DATA_SUCCESS':
+      if ((query === 'master_tile') || isValidClassA(query)) {
+        state.board.cells = data.ping.map((val) => { return val === 0 ? 0 : 1 })
+      } else {
+        state.board.cells = data.ping
+      }
+
       break
 
     case 'GET_MY_IP_ADDRESS_SUCCESS':
       state.myIpAddress = action.myIpAddress
+
       break
 
     case 'ZOOM_OUT':

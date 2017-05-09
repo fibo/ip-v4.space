@@ -1,6 +1,10 @@
 var subnetDataURL = require('./subnetDataURL')
 
-function fetchData (query) {
+var action = require('../action')
+
+function fetchData (query, dispatch) {
+  if (!dispatch) dispatch = Function.prototype
+
   var URL
   var req = new window.XMLHttpRequest()
 
@@ -10,19 +14,20 @@ function fetchData (query) {
     URL = subnetDataURL(query)
   }
 
-  req.onload = function (res) {
-    var data = JSON.parse(req.responseText)
-
-    console.log(data)
-  }
-
-  req.error = function () {
-    console.error('could not get data')
+  req.onreadystatechange = function (res) {
+    if (req.readyState === 4) {
+      if (req.status === 200) {
+        var data = JSON.parse(req.responseText)
+        dispatch(action.fetchDataSuccess(query, data))
+      } else {
+        dispatch(action.fetchDataFailure(query))
+      }
+    }
   }
 
   req.open('GET', URL, true)
 
-  req.send()
+  req.send(null)
 }
 
 module.exports = fetchData

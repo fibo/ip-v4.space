@@ -27,7 +27,7 @@ function app (initialState) {
       }
 
       currentState = reducer(currentState, action)
-      render(currentState)
+      render(currentState, dispatch)
 
       if (process.env.NODE_ENV !== 'production') {
         console.timeEnd(action.type)

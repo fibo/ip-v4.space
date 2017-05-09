@@ -1,5 +1,7 @@
 var Component = require('./Component')
 
+var action = require('../action')
+
 var Board = require('./Board')
 
 var createElementNS = require('../util/createElementNS')
@@ -29,7 +31,7 @@ class ZoomOutButton extends Component {
     element.addEventListener('click', (event) => {
       if (this.disabled) return
 
-      dispatch({ type: 'ZOOM_OUT' })
+      dispatch(action.zoomOut())
     })
   }
 
