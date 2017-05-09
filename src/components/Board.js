@@ -2,8 +2,17 @@ var staticProps = require('static-props')
 
 var Component = require('./Component')
 
+var classA = require('../util/classA')
+var classB = require('../util/classB')
+
+var border = 1
+
 function getSize () {
   return Math.min(window.innerHeight, window.innerWidth)
+}
+
+function getUnit () {
+  return (getSize() - 2 * border) / 16
 }
 
 class Board extends Component {
@@ -23,14 +32,10 @@ class Board extends Component {
       return selectedCell
     }
 
-    function getUnit () {
-      var border = 1
-      return (this.size - 2 * border) / 16
-    }
-
     // Attributes.
 
     staticProps(this)({
+      border: border,
       canvas: canvas,
       context: context,
       selectedCell: getSelectedCell,
@@ -39,14 +44,18 @@ class Board extends Component {
 
     // Events.
 
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', () => {
       dispatch({
         type: 'BOARD_RESIZE',
         size: getSize()
       })
     })
 
-    canvas.addEventListener('click', function (event) {
+    this.clickDisabled = false
+
+    canvas.addEventListener('click', (event) => {
+      if (this.clickDisabled) return
+
       var rect = canvas.getBoundingClientRect()
 
       var x = event.clientX - rect.left
@@ -58,14 +67,14 @@ class Board extends Component {
       var j = Math.floor(16 * y / size)
 
       dispatch({
-        type: 'ENTER_CELL',
+        type: 'CLICK_CELL',
         cell: [i, j]
       })
     })
 
     var cursormove = 'touchmove' in document ? 'touchmove' : 'mousemove'
 
-    canvas.addEventListener(cursormove, function (event) {
+    canvas.addEventListener(cursormove, (event) => {
       var rect = canvas.getBoundingClientRect()
 
       var x = event.clientX - rect.left
@@ -87,13 +96,14 @@ class Board extends Component {
 
     var cursorleave = 'touchleave' in document ? 'touchleave' : 'mouseleave'
 
-    canvas.addEventListener(cursorleave, function (event) {
+    canvas.addEventListener(cursorleave, (event) => {
       selectedCell = null
       dispatch({ type: 'BOARD_DRAW' })
     })
   }
 
   drawCells (state) {
+    var border = this.border
     var context = this.context
     var selectedCell = this.selectedCell
     var unit = this.unit
@@ -104,8 +114,11 @@ class Board extends Component {
     var level = 0
 
     if (subnet) {
-      level = subnet.split('.')
+      level = subnet.split('.').length
     }
+
+    // Disable click when maximum zoom level is reached.
+    this.clickDisabled = (level === 3)
 
     var color = 'rgb(200, 100, 100)'
     var highlightedColor = 'rgb(200, 0, 0)'
@@ -116,8 +129,26 @@ class Board extends Component {
     // myIpAddress = 10.20.30.40 |
     //                           | => myCellNum = 20
     // level = 1                 |
+    //
+    // but it should be displayed only if subnet is the same.
     if (myIpAddress) {
-      myCellNum = parseInt(myIpAddress.split('.')[level])
+      switch (level) {
+        case 0:
+          myCellNum = parseInt(classA(myIpAddress))
+          break
+
+        case 1:
+          if (classA(myIpAddress) === subnet) {
+            myCellNum = parseInt(myIpAddress.split('.')[1])
+          }
+          break
+
+        case 2:
+          if (classB(myIpAddress) === subnet) {
+            myCellNum = parseInt(myIpAddress.split('.')[2])
+          }
+          break
+      }
     }
 
     context.shadowBlur = 10
@@ -144,7 +175,7 @@ class Board extends Component {
         }
 
         if (cells[index] === 1) {
-          context.fillRect(i * unit, j * unit, unit, unit)
+          context.fillRect(border + i * unit, border + j * unit, unit, unit)
         } else {
           if (isSelectedCell || isMyCell) {
             context.lineWidth = 2
@@ -164,6 +195,7 @@ class Board extends Component {
   }
 
   drawGrid () {
+    var border = this.border
     var context = this.context
     var size = this.size
     var unit = this.unit
@@ -172,7 +204,7 @@ class Board extends Component {
     context.shadowBlur = 0
     context.strokeStyle = '#aeaeae'
 
-    for (var i = 0; i <= size; i += unit) {
+    for (var i = border; i <= size; i += unit) {
       context.beginPath()
       context.moveTo(i, 0)
       context.lineTo(i, size)
@@ -207,6 +239,9 @@ class Board extends Component {
   }
 }
 
-Board.getSize = getSize
+staticProps(Board)({
+  getSize: () => getSize,
+  getUnit: () => getUnit
+})
 
 module.exports = Board

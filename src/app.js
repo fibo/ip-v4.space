@@ -8,15 +8,6 @@ var PlaneView = require('./PlaneView')
 var logo = require('./logo')
 
 var JSONDataURL = require('./util/JSONDataURL')
-var isValidClassC = require('./util/isValidClassC')
-var parentClassB = require('./util/parentClassB')
-
-window.getIP = function (json) {
-  console.log(json.ip)
-}
-
-var callIpify = document.createElement('script')
-callIpify.src = 'https://api.ipify.org?format=jsonp&callback=getIP'
 */
 
 /**
@@ -32,6 +23,10 @@ function app (initialState) {
     var render = Function.prototype
 
     function dispatch (action) {
+      if (typeof action === 'function') {
+        return action(dispatch, currentState)
+      }
+
       if (process.env.NODE_ENV !== 'production') {
         console.time(action.type)
       }
