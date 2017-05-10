@@ -5,7 +5,7 @@ var isValidClassC = require('./util/isValidClassC')
 var emptyTile = () => { return Array(256).fill(-1) }
 
 function reducer (currenState, action) {
-  var state = Object.assign(currenState)
+  var state = Object.assign({}, currenState)
 
   var data = action.data
   var query = action.query
