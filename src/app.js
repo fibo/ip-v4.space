@@ -37,8 +37,6 @@ function app (initialState) {
     var root = new Root(document.getElementById('root'), dispatch)
 
     render = root.render.bind(root)
-
-    dispatch({ type: 'INIT' })
   }
 }
 

@@ -8,7 +8,8 @@ function getInitialState () {
       size: Board.getSize()
     },
     myIpAddress: null,
-    subnet: undefined
+    subnet: undefined,
+    dataURL: null
   }
 }
 
