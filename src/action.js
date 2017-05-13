@@ -13,17 +13,9 @@ exports.boardResize = (size) => {
   }
 }
 
-exports.clickCell = (cell) => {
-  return {
-    type: 'CLICK_CELL',
-    cell: cell
-  }
-}
-
-exports.fetchDataIfNeeded = (query) => (dispatch, state) => {
-  console.log(state)
-  if (shouldFetchData(query, state)) {
-    return dispatch(fetchDataRequest(query))
+exports.fetchDataIfNeeded = (subnet) => (dispatch, state) => {
+  if (shouldFetchData(subnet, state)) {
+    return dispatch(fetchDataRequest(subnet))
   }
 }
 
@@ -43,6 +35,7 @@ const fetchDataRequest = (query) => (dispatch) => {
     if (req.readyState === 4) {
       if (req.status === 200) {
         const data = JSON.parse(req.responseText)
+
         dispatch({
           type: 'FETCH_DATA_SUCCESS',
           data: data,
@@ -69,6 +62,13 @@ const fetchDataRequest = (query) => (dispatch) => {
 
 const shouldFetchData = (query, state) => {
   return subnetDataURL(query) !== state.dataURL
+}
+
+exports.zoomIn = (cell) => {
+  return {
+    type: 'ZOOM_IN',
+    cell: cell
+  }
 }
 
 exports.zoomOut = () => (dispatch, state) => {

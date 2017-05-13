@@ -1,16 +1,18 @@
+const no = require('not-defined')
+
 var isValidClassA = require('./util/isValidClassA')
 var isValidClassB = require('./util/isValidClassB')
 var isValidClassC = require('./util/isValidClassC')
 
 var subnetDataURL = require('./util/subnetDataURL')
 
-var emptyTile = () => { return Array(256).fill(-1) }
+const notFoundTile = () => { return Array(256).fill(-1) }
+const emptyTile = () => { return Array(256).fill(0) }
 
 function reducer (currenState, action) {
   var state = Object.assign({}, currenState)
 
   const data = action.data
-  const query = action.query
 
   var subnet = state.subnet
 
@@ -20,7 +22,59 @@ function reducer (currenState, action) {
 
       return state
 
-    case 'CLICK_CELL':
+    case 'FETCH_DATA_FAILURE':
+      state.board.cells = notFoundTile()
+
+      return state
+
+    case 'FETCH_DATA_REQUEST':
+
+      state.dataURL = subnetDataURL(action.subnet)
+
+      return state
+
+    case 'FETCH_DATA_SUCCESS':
+      state.data = action.data
+      state.board.cells = null
+
+      if ((no(subnet) || isValidClassA(subnet))) {
+        state.board.cells = data.ping.map((val) => { return val > 0 ? 1 : val })
+      }
+
+      if (isValidClassB(subnet)) {
+        state.board.cells = []
+
+        state.data.forEach((element) => {
+          if (element.ping === 0) {
+            state.board.cells.push(0)
+          } else {
+            state.board.cells.push(1)
+          }
+        })
+      }
+
+      if (isValidClassC(subnet)) {
+        state.data.forEach((element) => {
+          if (state.board.cells) return
+
+          if (element.subnet === subnet) {
+            if (element.ping === 0) {
+              state.board.cells = emptyTile()
+            } else {
+              state.board.cells = Object.assign([], element.ping)
+            }
+          }
+        })
+      }
+
+      return state
+
+    case 'GET_MY_IP_ADDRESS_SUCCESS':
+      state.myIpAddress = action.myIpAddress
+
+      return state
+
+    case 'ZOOM_IN':
       const cell = action.cell
       const cellNum = cell[1] * 16 + cell[0]
 
@@ -33,31 +87,6 @@ function reducer (currenState, action) {
       }
 
       state.subnet = subnet
-
-      return state
-
-    case 'FETCH_DATA_FAILURE':
-      state.board.cells = emptyTile()
-
-      return state
-
-    case 'FETCH_DATA_REQUEST':
-
-      state.dataURL = subnetDataURL(action.query)
-
-      return state
-
-    case 'FETCH_DATA_SUCCESS':
-      if ((query === 'master_tile') || isValidClassA(query)) {
-        state.board.cells = data.ping.map((val) => { return val === 0 ? 0 : 1 })
-      } else {
-        state.board.cells = data.ping
-      }
-
-      return state
-
-    case 'GET_MY_IP_ADDRESS_SUCCESS':
-      state.myIpAddress = action.myIpAddress
 
       return state
 

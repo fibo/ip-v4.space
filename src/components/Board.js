@@ -67,7 +67,7 @@ class Board extends Component {
       var i = Math.floor(16 * x / size)
       var j = Math.floor(16 * y / size)
 
-      dispatch(action.clickCell([i, j]))
+      dispatch(action.zoomIn([i, j]))
     })
 
     var cursormove = 'touchmove' in document ? 'touchmove' : 'mousemove'
@@ -154,6 +154,10 @@ class Board extends Component {
 
     for (var i = 0; i < 16; i++) {
       for (var j = 0; j < 16; j++) {
+        context.fillStyle = color
+        context.shadowColor = color
+        context.strokeStyle = color
+
         var isSelectedCell = selectedCell && (selectedCell.i === i) && (selectedCell.j === j)
         var index = j * 16 + i
         var isMyCell = myCellNum === index

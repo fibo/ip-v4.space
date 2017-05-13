@@ -49,6 +49,14 @@ function save (queryObject) {
 }
 
 class QueryString extends Component {
+  constructor (element, dispatch) {
+    super(element, dispatch)
+
+    const queryObject = getQueryObject()
+    const subnet = queryObject.subnet
+    dispatch(action.fetchDataIfNeeded(subnet))
+  }
+
   render (state, dispatch) {
     var queryObject = getQueryObject()
     const subnet = state.subnet
