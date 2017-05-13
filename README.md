@@ -43,3 +43,9 @@ npm run deploy
 
 Go to [Cloudflare Development mode](https://www.cloudflare.com/a/caching/ip-v4.space#development_mode) and disable cache to see results instantly.
 
+### Cache
+
+[Caching Level on Cloudflare](https://www.cloudflare.com/a/caching/ip-v4.space#cache_level) is set to *Ignore Query String* so it
+
+> Delivers the same resource to everyone independent of the query string.
+
