@@ -49,3 +49,5 @@ Go to [Cloudflare Development mode](https://www.cloudflare.com/a/caching/ip-v4.s
 
 > Delivers the same resource to everyone independent of the query string.
 
+[Browser Cache Expiration on Cloudflare](https://www.cloudflare.com/a/caching/ip-v4.space#browser_cache_ttl) is set to 1 month.
+
