@@ -2,24 +2,27 @@ var isValidClassA = require('./util/isValidClassA')
 var isValidClassB = require('./util/isValidClassB')
 var isValidClassC = require('./util/isValidClassC')
 
+var subnetDataURL = require('./util/subnetDataURL')
+
 var emptyTile = () => { return Array(256).fill(-1) }
 
 function reducer (currenState, action) {
   var state = Object.assign({}, currenState)
 
-  var data = action.data
-  var query = action.query
+  const data = action.data
+  const query = action.query
 
   var subnet = state.subnet
 
   switch (action.type) {
     case 'BOARD_RESIZE':
       state.board.size = action.size
-      break
+
+      return state
 
     case 'CLICK_CELL':
-      var cell = action.cell
-      var cellNum = cell[1] * 16 + cell[0]
+      const cell = action.cell
+      const cellNum = cell[1] * 16 + cell[0]
 
       if (subnet) {
         if ((isValidClassA(subnet)) || (isValidClassB(subnet))) {
@@ -31,12 +34,18 @@ function reducer (currenState, action) {
 
       state.subnet = subnet
 
-      break
+      return state
 
     case 'FETCH_DATA_FAILURE':
       state.board.cells = emptyTile()
 
-      break
+      return state
+
+    case 'FETCH_DATA_REQUEST':
+
+      state.dataURL = subnetDataURL(action.query)
+
+      return state
 
     case 'FETCH_DATA_SUCCESS':
       if ((query === 'master_tile') || isValidClassA(query)) {
@@ -45,12 +54,12 @@ function reducer (currenState, action) {
         state.board.cells = data.ping
       }
 
-      break
+      return state
 
     case 'GET_MY_IP_ADDRESS_SUCCESS':
       state.myIpAddress = action.myIpAddress
 
-      break
+      return state
 
     case 'ZOOM_OUT':
       if (isValidClassA(subnet)) {
@@ -61,11 +70,11 @@ function reducer (currenState, action) {
         state.subnet = subnet.split('.').splice(0, subnet.split('.').length - 1).join('.')
       }
 
-      break
+      return state
 
+    default:
+      return currenState
   }
-
-  return state
 }
 
 module.exports = reducer

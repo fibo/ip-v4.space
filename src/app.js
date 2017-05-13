@@ -2,9 +2,6 @@ var Root = require('./components/Root')
 var getInitialState = require('./store/getInitialState')
 var reducer = require('./reducer')
 
-var fetchData = require('./util/fetchData')
-fetchData('master_tile')
-
 /**
  * App loader.
  *

@@ -2,17 +2,11 @@ var Component = require('./Component')
 
 var action = require('../action')
 
-var isValidClassA = require('../util/isValidClassA')
-var isValidClassB = require('../util/isValidClassB')
-var isValidClassC = require('../util/isValidClassC')
-
-var parentClassB = require('../util/parentClassB')
-
 function buildQueryString (queryObject) {
   var queryString = '?'
 
   Object.keys(queryObject).forEach(function (key, index) {
-    var value = queryObject[key]
+    const value = queryObject[key]
 
     if (typeof value !== 'undefined') {
       if (index > 0) queryString += '&'
@@ -57,28 +51,12 @@ function save (queryObject) {
 class QueryString extends Component {
   render (state, dispatch) {
     var queryObject = getQueryObject()
-    var nothingChanged = true
-    var subnet = state.subnet
+    const subnet = state.subnet
 
     if (subnet !== queryObject.subnet) {
       queryObject.subnet = subnet
-      nothingChanged = false
-    }
-
-    if (nothingChanged) return
-
-    save(queryObject)
-
-    if (subnet) {
-      if (isValidClassA(subnet) || isValidClassB(subnet)) {
-        dispatch(action.fetchDataRequest(subnet))
-      } else {
-        if (isValidClassC(subnet)) {
-          dispatch(action.fetchDataRequest(parentClassB(subnet)))
-        }
-      }
-    } else {
-      dispatch(action.fetchDataRequest('master_tile'))
+      save(queryObject)
+      dispatch(action.fetchDataIfNeeded(subnet))
     }
   }
 }
