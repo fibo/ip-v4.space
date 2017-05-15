@@ -1,4 +1,4 @@
-const subnetDataURL = require('./util/subnetDataURL')
+var subnetDataURL = require('./util/subnetDataURL')
 
 exports.boardDraw = () => {
   return {
@@ -19,7 +19,7 @@ exports.fetchDataIfNeeded = (subnet) => (dispatch, state) => {
   }
 }
 
-const fetchDataRequest = (query) => (dispatch) => {
+var fetchDataRequest = (query) => (dispatch) => {
   if (!dispatch) dispatch = Function.prototype
 
   var URL
@@ -34,7 +34,7 @@ const fetchDataRequest = (query) => (dispatch) => {
   req.onreadystatechange = function (res) {
     if (req.readyState === 4) {
       if (req.status === 200) {
-        const data = JSON.parse(req.responseText)
+        var data = JSON.parse(req.responseText)
 
         dispatch({
           type: 'FETCH_DATA_SUCCESS',
@@ -60,7 +60,7 @@ const fetchDataRequest = (query) => (dispatch) => {
   })
 }
 
-const shouldFetchData = (query, state) => {
+var shouldFetchData = (query, state) => {
   return subnetDataURL(query) !== state.dataURL
 }
 

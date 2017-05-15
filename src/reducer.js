@@ -1,4 +1,4 @@
-const no = require('not-defined')
+var no = require('not-defined')
 
 var isValidClassA = require('./util/isValidClassA')
 var isValidClassB = require('./util/isValidClassB')
@@ -6,13 +6,13 @@ var isValidClassC = require('./util/isValidClassC')
 
 var subnetDataURL = require('./util/subnetDataURL')
 
-const notFoundTile = () => { return Array(256).fill(-1) }
-const emptyTile = () => { return Array(256).fill(0) }
+var notFoundTile = () => { return Array(256).fill(-1) }
+var emptyTile = () => { return Array(256).fill(0) }
 
 function reducer (currenState, action) {
   var state = Object.assign({}, currenState)
 
-  const data = action.data
+  var data = action.data
 
   var subnet = state.subnet
 
@@ -42,6 +42,14 @@ function reducer (currenState, action) {
       }
 
       if (isValidClassB(subnet)) {
+        // TODO fix netvision scanner, one class C subnet is missing.
+        if (state.data[0].subnet !== subnet + '.0') {
+          state.data.unshift({
+            subnet: subnet + '.0',
+            ping: 0
+          })
+        }
+
         state.board.cells = []
 
         state.data.forEach((element) => {
@@ -75,8 +83,8 @@ function reducer (currenState, action) {
       return state
 
     case 'ZOOM_IN':
-      const cell = action.cell
-      const cellNum = cell[1] * 16 + cell[0]
+      var cell = action.cell
+      var cellNum = cell[1] * 16 + cell[0]
 
       if (subnet) {
         if ((isValidClassA(subnet)) || (isValidClassB(subnet))) {

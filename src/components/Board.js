@@ -27,6 +27,7 @@ class Board extends Component {
     canvas.width = size
 
     var context = canvas.getContext('2d')
+    // context.translate(0.5, 0.5)
 
     var selectedCell = null
 
@@ -106,7 +107,11 @@ class Board extends Component {
     var selectedCell = this.selectedCell
     var unit = this.unit
 
+    var subUnit = (unit - border) / 16
+    subUnit = Math.round(100 * subUnit) / 100 // Round to 2 decimals.
+
     var cells = state.board.cells
+    var data = state.data
     var myIpAddress = state.myIpAddress
     var subnet = state.subnet
     var level = 0
@@ -150,13 +155,12 @@ class Board extends Component {
       }
     }
 
-    context.shadowBlur = 10
-
     for (var i = 0; i < 16; i++) {
       for (var j = 0; j < 16; j++) {
         context.fillStyle = color
         context.shadowColor = color
         context.strokeStyle = color
+        context.shadowBlur = 0
 
         var isSelectedCell = selectedCell && (selectedCell.i === i) && (selectedCell.j === j)
         var index = j * 16 + i
@@ -184,10 +188,29 @@ class Board extends Component {
         }
 
         if (cells && cells[index]) {
-          context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
+          if (level === 2) {
+            if (data[index] && typeof data[index].ping === 'number') {
+              context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
+            } else {
+              for (var a = 0; a < 16; a++) {
+                for (var b = 0; b < 16; b++) {
+                  var subIndex = b * 16 + a
+
+                  if (data[index] && data[index].ping && data[index].ping[subIndex] === 1) {
+                    context.lineWidth = 1
+                    context.shadowBlur = 0
+                    context.fillRect(border + i * unit + a * subUnit, border + j * unit + b * subUnit, subUnit, subUnit)
+                  }
+                }
+              }
+            }
+          } else {
+            context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
+          }
         } else {
           if (isSelectedCell || isMyCell) {
             context.lineWidth = 2
+            context.shadowBlur = 10
 
             // Draw a square.
             context.beginPath()

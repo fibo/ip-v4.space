@@ -1,8 +1,8 @@
-const classA = require('./classA')
-const classB = require('./classB')
-const isValidClassA = require('./isValidClassA')
-const isValidClassB = require('./isValidClassB')
-const isValidClassC = require('./isValidClassC')
+var classA = require('./classA')
+var classB = require('./classB')
+var isValidClassA = require('./isValidClassA')
+var isValidClassB = require('./isValidClassB')
+var isValidClassC = require('./isValidClassC')
 
 function subnetDataURL (subnet) {
   if (subnet) {

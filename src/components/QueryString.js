@@ -6,7 +6,7 @@ function buildQueryString (queryObject) {
   var queryString = '?'
 
   Object.keys(queryObject).forEach(function (key, index) {
-    const value = queryObject[key]
+    var value = queryObject[key]
 
     if (typeof value !== 'undefined') {
       if (index > 0) queryString += '&'
@@ -52,14 +52,14 @@ class QueryString extends Component {
   constructor (element, dispatch) {
     super(element, dispatch)
 
-    const queryObject = getQueryObject()
-    const subnet = queryObject.subnet
+    var queryObject = getQueryObject()
+    var subnet = queryObject.subnet
     dispatch(action.fetchDataIfNeeded(subnet))
   }
 
   render (state, dispatch) {
     var queryObject = getQueryObject()
-    const subnet = state.subnet
+    var subnet = state.subnet
 
     if (subnet !== queryObject.subnet) {
       queryObject.subnet = subnet
