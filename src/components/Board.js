@@ -110,14 +110,19 @@ class Board extends Component {
     var subUnit = (unit - border) / 16
     subUnit = Math.round(100 * subUnit) / 100 // Round to 2 decimals.
 
-    var cells = state.board.cells
     var data = state.data
     var myIpAddress = state.myIpAddress
     var subnet = state.subnet
     var level = 0
 
+    var indexB
+
     if (subnet) {
       level = subnet.split('.').length
+    }
+
+    if (level === 3) {
+      indexB = parseInt(subnet.split('.')[2])
     }
 
     // Disable click when maximum zoom level is reached.
@@ -126,7 +131,6 @@ class Board extends Component {
     var color = 'rgb(200, 100, 100)'
     var highlightedColor = 'rgb(200, 0, 0)'
     var myCellColor = 'rgb(0, 200, 0)'
-    var notFoundColor = 'rgb(17, 77, 77)'
 
     var myCellNum
 
@@ -170,57 +174,44 @@ class Board extends Component {
           context.fillStyle = highlightedColor
           context.shadowColor = highlightedColor
           context.strokeStyle = highlightedColor
+        }
+
+        if (isMyCell) {
+          context.fillStyle = myCellColor
+          context.shadowColor = myCellColor
+          context.strokeStyle = myCellColor
+        }
+
+        if (level === 3) {
+          if (data[indexB] && data[indexB].ping && data[indexB].ping[index] === 1) {
+            context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
+          }
         } else {
-          if (isMyCell) {
-            context.fillStyle = myCellColor
-            context.shadowColor = myCellColor
-            context.strokeStyle = myCellColor
-          } else {
-            if (cells && cells[index] === -1) {
-              context.fillStyle = notFoundColor
-              context.shadowColor = notFoundColor
-            }
-            if (cells && cells[index] === 1) {
-              context.fillStyle = color
-              context.shadowColor = color
+          for (var a = 0; a < 16; a++) {
+            for (var b = 0; b < 16; b++) {
+              var subIndex = b * 16 + a
+
+              if (data[index] && data[index].ping && data[index].ping[subIndex] === 1) {
+                context.lineWidth = 1
+                context.shadowBlur = 0
+                context.fillRect(border + i * unit + a * subUnit, border + j * unit + b * subUnit, subUnit, subUnit)
+              }
             }
           }
         }
 
-        if (cells && cells[index]) {
-          if ((level === 1) || (level === 2)) {
-            if (data[index] && typeof data[index].ping === 'number') {
-              context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
-            } else {
-              for (var a = 0; a < 16; a++) {
-                for (var b = 0; b < 16; b++) {
-                  var subIndex = b * 16 + a
+        if (isSelectedCell || isMyCell) {
+          context.lineWidth = 2
+          context.shadowBlur = 10
 
-                  if (data[index] && data[index].ping && data[index].ping[subIndex] === 1) {
-                    context.lineWidth = 1
-                    context.shadowBlur = 0
-                    context.fillRect(border + i * unit + a * subUnit, border + j * unit + b * subUnit, subUnit, subUnit)
-                  }
-                }
-              }
-            }
-          } else {
-            context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
-          }
-        } else {
-          if (isSelectedCell || isMyCell) {
-            context.lineWidth = 2
-            context.shadowBlur = 10
-
-            // Draw a square.
-            context.beginPath()
-            context.moveTo(i * unit + 1, j * unit + 1)
-            context.lineTo((i + 1) * unit - 1, j * unit + 1)
-            context.lineTo((i + 1) * unit - 1, (j + 1) * unit - 1)
-            context.lineTo(i * unit + 1, (j + 1) * unit - 1)
-            context.lineTo(i * unit + 1, j * unit + 1)
-            context.stroke()
-          }
+          // Draw a square.
+          context.beginPath()
+          context.moveTo(i * unit + 1, j * unit + 1)
+          context.lineTo((i + 1) * unit - 1, j * unit + 1)
+          context.lineTo((i + 1) * unit - 1, (j + 1) * unit - 1)
+          context.lineTo(i * unit + 1, (j + 1) * unit - 1)
+          context.lineTo(i * unit + 1, j * unit + 1)
+          context.stroke()
         }
       }
     }

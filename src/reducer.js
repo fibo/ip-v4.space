@@ -1,11 +1,6 @@
-var no = require('not-defined')
-
 var isValidClassA = require('./util/isValidClassA')
 var isValidClassB = require('./util/isValidClassB')
 var isValidClassC = require('./util/isValidClassC')
-
-var notFoundTile = () => { return Array(256).fill(-1) }
-var emptyTile = () => { return Array(256).fill(0) }
 
 function reducer (currenState, action) {
   var state = Object.assign({}, currenState)
@@ -17,8 +12,6 @@ function reducer (currenState, action) {
       return state
 
     case 'FETCH_DATA_FAILURE':
-      state.board.cells = notFoundTile()
-
       return state
 
     case 'FETCH_DATA_REQUEST':
@@ -29,23 +22,7 @@ function reducer (currenState, action) {
     case 'FETCH_DATA_SUCCESS':
       state.subnet = action.subnet
       state.data = action.data
-      state.board.cells = null
 
-      if (no(state.subnet)) {
-        state.board.cells = state.data.ping.map((val) => { return val > 0 ? 1 : val })
-      }
-
-      if (isValidClassA(state.subnet)) {
-        state.board.cells = []
-
-        state.data.forEach((element) => {
-          if (element.ping === 0) {
-            state.board.cells.push(0)
-          } else {
-            state.board.cells.push(1)
-          }
-        })
-      }
       if (isValidClassB(state.subnet)) {
         // TODO fix netvision scanner, one class C subnet is missing.
         if (state.data[0].subnet !== state.subnet + '.0') {
@@ -54,30 +31,6 @@ function reducer (currenState, action) {
             ping: 0
           })
         }
-
-        state.board.cells = []
-
-        state.data.forEach((element) => {
-          if (element.ping === 0) {
-            state.board.cells.push(0)
-          } else {
-            state.board.cells.push(1)
-          }
-        })
-      }
-
-      if (isValidClassC(state.subnet)) {
-        state.data.forEach((element) => {
-          if (state.board.cells) return
-
-          if (element.subnet === state.subnet) {
-            if (element.ping === 0) {
-              state.board.cells = emptyTile()
-            } else {
-              state.board.cells = Object.assign([], element.ping)
-            }
-          }
-        })
       }
 
       return state
