@@ -188,7 +188,7 @@ class Board extends Component {
         }
 
         if (cells && cells[index]) {
-          if (level === 2) {
+          if ((level === 1) || (level === 2)) {
             if (data[index] && typeof data[index].ping === 'number') {
               context.fillRect(border + i * unit, border + j * unit, unit - border, unit - border)
             } else {

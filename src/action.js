@@ -14,22 +14,19 @@ exports.boardResize = (size) => {
 }
 
 exports.fetchDataIfNeeded = (subnet) => (dispatch, state) => {
-  if (shouldFetchData(subnet, state)) {
-    return dispatch(fetchDataRequest(subnet))
+  var dataURL = subnetDataURL(subnet)
+
+  var shouldFetchData = subnetDataURL(subnet) !== state.dataURL
+
+  if (shouldFetchData) {
+    return dispatch(fetchDataRequest({ subnet, dataURL }))
   }
 }
 
-var fetchDataRequest = (query) => (dispatch) => {
+var fetchDataRequest = ({ subnet, dataURL }) => (dispatch) => {
   if (!dispatch) dispatch = Function.prototype
 
-  var URL
   var req = new window.XMLHttpRequest()
-
-  if (query === 'master_tile') {
-    URL = '/data/master_tile.json'
-  } else {
-    URL = subnetDataURL(query)
-  }
 
   req.onreadystatechange = function (res) {
     if (req.readyState === 4) {
@@ -38,30 +35,30 @@ var fetchDataRequest = (query) => (dispatch) => {
 
         dispatch({
           type: 'FETCH_DATA_SUCCESS',
-          data: data,
-          query: query
+          data,
+          subnet,
+          dataURL
         })
       } else {
         dispatch({
           type: 'FETCH_DATA_FAILURE',
-          query: query
+          data,
+          subnet,
+          dataURL
         })
       }
     }
   }
 
-  req.open('GET', URL, true)
+  req.open('GET', dataURL, true)
 
   req.send(null)
 
   dispatch({
     type: 'FETCH_DATA_REQUEST',
-    query: query
+    subnet,
+    dataURL
   })
-}
-
-var shouldFetchData = (query, state) => {
-  return subnetDataURL(query) !== state.dataURL
 }
 
 exports.zoomIn = (cell) => {

@@ -4,17 +4,11 @@ var isValidClassA = require('./util/isValidClassA')
 var isValidClassB = require('./util/isValidClassB')
 var isValidClassC = require('./util/isValidClassC')
 
-var subnetDataURL = require('./util/subnetDataURL')
-
 var notFoundTile = () => { return Array(256).fill(-1) }
 var emptyTile = () => { return Array(256).fill(0) }
 
 function reducer (currenState, action) {
   var state = Object.assign({}, currenState)
-
-  var data = action.data
-
-  var subnet = state.subnet
 
   switch (action.type) {
     case 'BOARD_RESIZE':
@@ -28,24 +22,35 @@ function reducer (currenState, action) {
       return state
 
     case 'FETCH_DATA_REQUEST':
-
-      state.dataURL = subnetDataURL(action.subnet)
+      state.dataURL = action.dataURL
 
       return state
 
     case 'FETCH_DATA_SUCCESS':
+      state.subnet = action.subnet
       state.data = action.data
       state.board.cells = null
 
-      if ((no(subnet) || isValidClassA(subnet))) {
-        state.board.cells = data.ping.map((val) => { return val > 0 ? 1 : val })
+      if (no(state.subnet)) {
+        state.board.cells = state.data.ping.map((val) => { return val > 0 ? 1 : val })
       }
 
-      if (isValidClassB(subnet)) {
+      if (isValidClassA(state.subnet)) {
+        state.board.cells = []
+
+        state.data.forEach((element) => {
+          if (element.ping === 0) {
+            state.board.cells.push(0)
+          } else {
+            state.board.cells.push(1)
+          }
+        })
+      }
+      if (isValidClassB(state.subnet)) {
         // TODO fix netvision scanner, one class C subnet is missing.
-        if (state.data[0].subnet !== subnet + '.0') {
+        if (state.data[0].subnet !== state.subnet + '.0') {
           state.data.unshift({
-            subnet: subnet + '.0',
+            subnet: state.subnet + '.0',
             ping: 0
           })
         }
@@ -61,11 +66,11 @@ function reducer (currenState, action) {
         })
       }
 
-      if (isValidClassC(subnet)) {
+      if (isValidClassC(state.subnet)) {
         state.data.forEach((element) => {
           if (state.board.cells) return
 
-          if (element.subnet === subnet) {
+          if (element.subnet === state.subnet) {
             if (element.ping === 0) {
               state.board.cells = emptyTile()
             } else {
@@ -86,25 +91,23 @@ function reducer (currenState, action) {
       var cell = action.cell
       var cellNum = cell[1] * 16 + cell[0]
 
-      if (subnet) {
-        if ((isValidClassA(subnet)) || (isValidClassB(subnet))) {
-          subnet += '.' + cellNum.toString()
+      if (state.subnet) {
+        if ((isValidClassA(state.subnet)) || (isValidClassB(state.subnet))) {
+          state.subnet += '.' + cellNum.toString()
         }
       } else {
-        subnet = cellNum.toString()
+        state.subnet = cellNum.toString()
       }
-
-      state.subnet = subnet
 
       return state
 
     case 'ZOOM_OUT':
-      if (isValidClassA(subnet)) {
+      if (isValidClassA(state.subnet)) {
         delete state.subnet
       }
 
-      if ((isValidClassB(subnet)) || (isValidClassC(subnet))) {
-        state.subnet = subnet.split('.').splice(0, subnet.split('.').length - 1).join('.')
+      if ((isValidClassB(state.subnet)) || (isValidClassC(state.subnet))) {
+        state.subnet = state.subnet.split('.').splice(0, state.subnet.split('.').length - 1).join('.')
       }
 
       return state
