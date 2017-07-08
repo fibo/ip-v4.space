@@ -1,4 +1,13 @@
 // Load variables first.
 @import 'variables';
 
-@import 'base';
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $white;
+}
+
+@import 'board';

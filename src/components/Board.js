@@ -1,6 +1,7 @@
+var no = require('not-defined')
 var staticProps = require('static-props')
 
-// var action = require('../action')
+var action = require('../action')
 
 var Component = require('./Component')
 
@@ -23,10 +24,31 @@ class Board extends Component {
   constructor (canvas, dispatch) {
     super(canvas, dispatch)
 
-    var size = this.size = getSize()
+    // Attributes.
 
-    canvas.setAttributeNS(null, 'width', size)
-    canvas.setAttributeNS(null, 'height', size)
+    staticProps(this)({
+      border: border
+    })
+
+    // Events.
+
+    // Throttled resize.
+    // See also https://developer.mozilla.org/en-US/docs/Web/Events/resize#setTimeout
+    var resizeTimeout
+
+    function optimizedResize () {
+      if (no(resizeTimeout)) {
+        resizeTimeout = setTimeout(function () {
+          resizeTimeout = null
+
+          // Actual resize code.
+          var size = getSize()
+          dispatch(action.boardResize(size))
+        }, 771)
+      }
+    }
+
+    window.addEventListener('resize', optimizedResize)
 
     // TODO Remove this, just to see something
     var rect = createElementNS('rect')
@@ -36,9 +58,6 @@ class Board extends Component {
     canvas.appendChild(rect)
 
     /*
-    var context = canvas.getContext('2d')
-    // context.translate(0.5, 0.5)
-
     var selectedCell = null
 
     function getSelectedCell () {
@@ -53,14 +72,6 @@ class Board extends Component {
       context: context,
       selectedCell: getSelectedCell,
       unit: getUnit
-    })
-
-    // Events.
-
-    window.addEventListener('resize', () => {
-      var size = getSize()
-
-      dispatch(action.boardResize(size))
     })
 
     this.clickDisabled = false
@@ -252,24 +263,25 @@ class Board extends Component {
   }
 
   render (state) {
-    var boardSize = state.board.size
-
-    var canvas = this.canvas
-    var size = this.size
-
-    this.context.clearRect(0, 0, size, size)
-
     // Resize canvas if necessary.
 
-    if (size !== boardSize) {
-      canvas.height = boardSize
-      canvas.width = boardSize
+    var boardSize = state.board.size
 
-      this.size = boardSize
+    if (this.size !== boardSize) {
+      this.setSize(boardSize)
     }
 
-    this.drawGrid()
-    this.drawCells(state)
+    // TODO this.drawGrid()
+    // TODO this.drawCells(state)
+  }
+
+  setSize (size) {
+    var canvas = this.element
+
+    canvas.setAttributeNS(null, 'width', size)
+    canvas.setAttributeNS(null, 'height', size)
+
+    this.size = size
   }
 }
 
