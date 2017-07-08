@@ -15,7 +15,7 @@ class Root extends Component {
 
     this.component.QueryString = new QueryString(null, dispatch)
 
-    var canvas = document.createElement('canvas')
+    var canvas = createElementNS('svg')
     element.appendChild(canvas)
     this.component.Board = new Board(canvas, dispatch)
 

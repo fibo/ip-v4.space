@@ -1,11 +1,13 @@
 var staticProps = require('static-props')
 
-var action = require('../action')
+// var action = require('../action')
 
 var Component = require('./Component')
 
 var classA = require('../util/classA')
 var classB = require('../util/classB')
+
+var createElementNS = require('../util/createElementNS')
 
 var border = 1
 
@@ -23,9 +25,17 @@ class Board extends Component {
 
     var size = this.size = getSize()
 
-    canvas.height = size
-    canvas.width = size
+    canvas.setAttributeNS(null, 'width', size)
+    canvas.setAttributeNS(null, 'height', size)
 
+    // TODO Remove this, just to see something
+    var rect = createElementNS('rect')
+    rect.setAttributeNS(null, 'width', 100)
+    rect.setAttributeNS(null, 'height', 100)
+    rect.setAttributeNS(null, 'fill', '#f06')
+    canvas.appendChild(rect)
+
+    /*
     var context = canvas.getContext('2d')
     // context.translate(0.5, 0.5)
 
@@ -99,6 +109,7 @@ class Board extends Component {
       selectedCell = null
       dispatch(action.boardDraw())
     })
+  */
   }
 
   drawCells (state) {
