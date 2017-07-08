@@ -10,16 +10,16 @@
     "check-deps": "npm outdated",
     "predeploy_css": "npm run sass",
     "deploy": "for x in css js html media seo; do npm run deploy_${x}; done",
-    "deploy_css": "aws s3 cp style.css s3://ip-v4.space/style.css",
+    "deploy_css": "aws s3 cp style.css s3://$npm_package_name/style.css",
     "predeploy_js": "npm run browserify",
-    "deploy_js": "aws s3 cp bundle.js s3://ip-v4.space/bundle.js",
+    "deploy_js": "aws s3 cp bundle.js s3://$npm_package_name/bundle.js",
     "deploy_html": "for x in index 404; do npm run deploy_${x}_html; done",
-    "deploy_index_html": "aws s3 cp index.html s3://ip-v4.space/index.html",
+    "deploy_index_html": "aws s3 cp index.html s3://$npm_package_name/index.html",
     "deploy_seo": "for x in robots_txt sitemap_xml; do npm run deploy_${x}; done",
-    "deploy_robots_txt": "aws s3 cp robots.txt s3://ip-v4.space/robots.txt",
-    "deploy_sitemap_xml": "aws s3 cp sitemap.xml s3://ip-v4.space/sitemap.xml",
-    "deploy_404_html": "aws s3 cp 404.html s3://ip-v4.space/404.html",
-    "deploy_media": "aws s3 sync media s3://ip-v4.space/media",
+    "deploy_robots_txt": "aws s3 cp robots.txt s3://$npm_package_name/robots.txt",
+    "deploy_sitemap_xml": "aws s3 cp sitemap.xml s3://$npm_package_name/sitemap.xml",
+    "deploy_404_html": "aws s3 cp 404.html s3://$npm_package_name/404.html",
+    "deploy_media": "aws s3 sync media s3://$npm_package_name/media",
     "lint": "npm run lint_css; npm run lint_js",
     "lint_css": "sass-lint -v src/sass/*",
     "lint_js": "cd src; standard; cd ..",
@@ -45,7 +45,7 @@
     "name": "Gianluca Casati",
     "url": "http://g14n.info"
   },
-  "license": "MIT",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/fibo/ip-v4.space/issues"
   },
@@ -56,11 +56,11 @@
     "babelify": "^7.3.0",
     "browserify": "^14.3.0",
     "budo": "^10.0.3",
-    "envify": "^4.0.0",
+    "envify": "^4.1.0",
     "node-sass": "^4.5.2",
     "pre-commit": "^1.2.2",
     "sass-lint": "^1.10.2",
-    "uglify-js": "^3.0.4"
+    "uglify-js": "^3.0.24"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
