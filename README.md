@@ -10,19 +10,32 @@ Install deps and build
 
 ```bash
 npm install
-npm run build
 ```
 
-Start dev server
+### Watch
+
+Launch the following command and you can start coding in watch mode.
+
+```bash
+npm run watch
+```
+
+Stop it safely with a <kbd>CTRL-C</kbd>.
+
+### Demo
+
+Start dev server locally, it will open your browser.
 
 ```bash
 npm start
 ```
 
-Optionally start sass in watch mode to edit CSS
+### Build
+
+Generate build. Not that its files are gitignored.
 
 ```bash
-npm run sass_watch
+npm run build
 ```
 
 ### Deploy
