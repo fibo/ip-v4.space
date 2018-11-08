@@ -13,9 +13,7 @@ class Ipify extends Component {
 
     window.getMyIpAddress = getMyIpAddress
 
-    var src = 'https://api.ipify.org?format=jsonp&callback=getMyIpAddress'
-
-    this.src = src
+    this.src = 'https://api.ipify.org?format=jsonp&callback=getMyIpAddress'
 
     this.scriptCreated = false
   }
